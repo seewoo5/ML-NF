@@ -1,0 +1,58 @@
+[
+    {
+        "name": "sextic_galois_dt_zc_1000",
+        "degree": 6,
+        "feature_type": "a",
+        "model_type": "dt",
+        "num_coeffs": 1000
+    },
+    {
+        "name": "sextic_galois_dt_zc_10000_sq_cb",
+        "degree": 6,
+        "feature_type": "a",
+        "model_type": "dt",
+        "num_coeffs": 10000,
+        "powers_only": [2, 3]
+    },
+    {
+        "name": "sextic_galois_dt_zc_10000_prime",
+        "degree": 6,
+        "feature_type": "a_p",
+        "model_type": "dt",
+        "num_coeffs": 10000
+    },
+    {
+        "name": "sextic_galois_dt_poly",
+        "degree": 6,
+        "feature_type": "c",
+        "model_type": "dt"
+    },
+    {
+        "name": "sextic_galois_lr_zc_1000",
+        "degree": 6,
+        "feature_type": "a",
+        "model_type": "lr",
+        "num_coeffs": 1000
+    },
+    {
+        "name": "sextic_galois_lr_zc_10000_sq_cb",
+        "degree": 6,
+        "feature_type": "a",
+        "model_type": "lr",
+        "num_coeffs": 10000,
+        "powers_only": [2, 3]
+    },
+    {
+        "name": "sextic_galois_lr_zc_10000_prime",
+        "degree": 6,
+        "feature_type": "a_p",
+        "model_type": "lr",
+        "num_coeffs": 10000
+    },
+    {
+        "name": "sextic_galois_lr_poly",
+        "degree": 6,
+        "feature_type": "c",
+        "model_type": "lr"
+    }
+]

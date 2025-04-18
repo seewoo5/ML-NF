@@ -1,0 +1,83 @@
+{
+    "nf_2": {
+        "degree": 2,
+        "include_galois_gp": false,
+        "galois_only": false,
+        "N": 1000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_2"
+    },
+    "nf_3": {
+        "degree": 3,
+        "include_galois_gp": false,
+        "galois_only": false,
+        "N": 1000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_3"
+    },
+    "nf_4": {
+        "degree": 4,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 1000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_4"
+    },
+    "nf_4_galois": {
+        "degree": 4,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 10000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_4_galois"
+    },
+    "nf_6": {
+        "degree": 6,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 10000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_6_galois"
+    },
+    "nf_8": {
+        "degree": 8,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 10000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_8_galois"
+    },
+    "nf_9": {
+        "degree": 9,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 10000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_9_galois"
+    },
+    "nf_10": {
+        "degree": 10,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 10000,
+        "powers_only": null,
+        "limit": null,
+        "filename": "nf_10_galois"
+    },
+    "nf_10_sq_cb_qu_100000": {
+        "degree": 10,
+        "include_galois_gp": true,
+        "galois_only": true,
+        "N": 100000,
+        "powers_only": [2, 3, 5],
+        "limit": null,
+        "filename": "nf_10_galois_sq_cb_qu_100000"
+    }
+}
