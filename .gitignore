@@ -1,0 +1,6 @@
+data_nf/*
+*.csv
+*.sage.py
+.DS_Store
+.venv
+__pycache__/
