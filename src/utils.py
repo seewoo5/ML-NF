@@ -103,6 +103,8 @@ def run_experiment(
     model_type: Literal["dt", "rf", "lr"] = "dt",
     num_coeffs: Optional[int] = 1000,
     powers_only: Optional[List[int]] = None,
+    lr_max_iter: int = 10000,
+    lr_solver: str = "lbfgs",
 ):
     X, y = X_y(df, degree=degree, feature_type=feature_type, label=label, N=num_coeffs, powers_only=powers_only)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
@@ -117,7 +119,7 @@ def run_experiment(
     elif model_type == "rf":
         model = RandomForestClassifier(random_state=42)
     elif model_type == "lr":
-        model = LogisticRegression(random_state=42, max_iter=10000)
+        model = LogisticRegression(random_state=42, max_iter=lr_max_iter, solver=lr_solver)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
     
@@ -145,9 +147,17 @@ def run_experiments(
     class_names: List[str],
     current_dir: str,
     lr_po: Optional[List[int]] = None,
+    save_tree_fig: bool = True,
 ):
     with open(f"{current_dir}/experiments/{experiments_file}.json", "r") as f:
         experiments = json.load(f)
+
+    if "rank" in experiments_file:
+        label = "rank"
+    elif "galois" in experiments_file:
+        label = "galois_label"
+    else:
+        raise ValueError(f"Unknown label type in {experiments_file}")
 
     for exp in experiments:
         print(f"Running experiment: {exp['name']}")
@@ -162,13 +172,15 @@ def run_experiments(
             test_size=0.2,
             feature_type=ft,
             degree=deg,
-            label="galois_label",
+            label=label,
             model_type=exp.get("model_type"),
             num_coeffs=nc,
             powers_only=po,
+            lr_max_iter=exp.get("lr_max_iter", 10000),
+            lr_solver=exp.get("lr_solver", "lbfgs"),
         )
 
-        if mt == "dt":
+        if mt == "dt" and save_tree_fig:
             if ft == "a":
                 if po is None:
                     feature_names = [f"a_{i:05d}" for i in range(1, nc+1)]
@@ -188,21 +200,26 @@ def run_experiments(
             )
             plt.savefig(current_dir / f"figs/dt/{exp['name']}.png", dpi=1200)
             plt.show()
-        elif mt == "lr" and ft == "a" and po is None:
-            # Check distribution of whole and special-power coefficients
-            k = min(30, nc - 1)
-            po_indices = powers(nc, lr_po)
-            po_indices = [i - 1 for i in po_indices]  # -1 because of 0-indexing
-            po_name = []
-            if 2 in lr_po:
-                po_name.append("sq")
-            if 3 in lr_po:
-                po_name.append("cb")
-            if 5 in lr_po:
-                po_name.append("qu")
-            po_name = "_".join(po_name)
-            lr_coefficient_dist(model, k=k, save_hist=f"{current_dir}/figs/lr/{exp['name']}_whole.png")
-            lr_coefficient_dist(model, indices=po_indices, save_hist=f"{current_dir}/figs/lr/{exp['name']}_{po_name}.png")
+        elif mt == "lr":
+            if label == "galois_label" and ft == "a" and po is None:
+                # Check distribution of whole and special-power coefficients
+                k = min(30, nc - 1)
+                po_indices = powers(nc, lr_po)
+                po_indices = [i - 1 for i in po_indices]  # -1 because of 0-indexing
+                po_name = []
+                if 2 in lr_po:
+                    po_name.append("sq")
+                if 3 in lr_po:
+                    po_name.append("cb")
+                if 5 in lr_po:
+                    po_name.append("qu")
+                po_name = "_".join(po_name)
+                lr_coefficient_dist(model, k=k, save_hist=f"{current_dir}/figs/lr/{exp['name']}_whole.png")
+                lr_coefficient_dist(model, indices=po_indices, save_hist=f"{current_dir}/figs/lr/{exp['name']}_{po_name}.png")
+            elif label == "rank" and ft == "c":
+                print(f"model weights: {model.coef_}")
+                print(f"model bias: {model.intercept_}")
+
 
 
 def print_tree_structure(clf: DecisionTreeClassifier, max_depth: Optional[int] = None):
