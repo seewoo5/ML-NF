@@ -8,6 +8,9 @@ Make sure that [SageMath](https://github.com/sagemath/sage) is installed. Also, 
 
 - [Polars](https://pola.rs/)
 - [lmfdb-lite](https://github.com/roed314/lmfdb-lite)
+- [scikit-learn](https://scikit-learn.org/stable/index.html)
+- [matplotlib](https://matplotlib.org/)
+- [numpy](https://numpy.org/doc/stable/index.html)
 - [tqdm](https://tqdm.github.io/)
 
 The following libraries will be used outside of Sage (for ML experiments).
@@ -32,7 +35,7 @@ To use external python libraries in Sage, you need to install them through Sage 
 
 2. Use `pip` or `pip3` to install `polars` and `lmfdb-lite`. If you are using Mac OS, you probably need to install [`polars-lts-cpu`](https://pypi.org/project/polars-lts-cpu/), see [this issue](https://github.com/pola-rs/polars/issues/12292).
     ```
-    pip3 install polars-lts-cpu tqdm
+    pip3 install polars-lts-cpu tqdm scikit-learn matplotlib numpy
     pip3 install -U "lmfdb-lite[pgbinary] @ git+https://github.com/roed314/lmfdb-lite.git"
     ```
 

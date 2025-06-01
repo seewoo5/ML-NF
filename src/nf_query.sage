@@ -60,17 +60,18 @@ def load_nf(
     qfs = nf_db.search(filter, cols, limit=limit)
     qfs = list(qfs)
     
-    columns = ["rank"]
+    columns = [("rank", pl.Int8)]
     if include_galois_gp:
-        columns.append("galois_label")
+        columns.append(("galois_label", pl.String))
     for i in range(degree):
-        columns.append(f"c_{i}")
+        columns.append((f"c_{i}", pl.Int128))
     if powers_only is None:
         for i in range(1, N+1):
-            columns.append(f"a_{i:05d}")
+            columns.append((f"a_{i:05d}", pl.Int64))
     else:
         for i in powers(N, powers_only):
-            columns.append(f"a_{i:05d}")
+            columns.append((f"a_{i:05d}", pl.Int64))
+    columns = pl.Schema(columns)
 
     df = None
     df_label = None
@@ -90,13 +91,13 @@ def load_nf(
             F_data = [r]
             if include_galois_gp:
                 F_data.append(galois_label)
-            F_data += list(float(x) for x in F["coeffs"][:-1]) + list(zc(F["coeffs"], N, powers_only))
+            F_data += list(ZZ(x) for x in F["coeffs"][:-1]) + list(zc(F["coeffs"], N, powers_only))
             data.append(F_data)
         if df is None:
-            df_label = pl.DataFrame(labels, schema=["label"])
+            df_label = pl.DataFrame(labels, schema=[("label", pl.String)])
             df = pl.DataFrame(data, schema=columns)
         else:
-            df_label.extend(pl.DataFrame(labels, schema=["label"]))
+            df_label.extend(pl.DataFrame(labels, schema=[("label", pl.String)]))
             df.extend(pl.DataFrame(data, schema=columns))
 
     df = pl.concat([df_label, df], how="horizontal")
