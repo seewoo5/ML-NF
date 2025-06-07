@@ -4,7 +4,9 @@
         "degree": 8,
         "feature_type": "a",
         "model_type": "dt",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "class_names": ["C_8", "C_4 \\times C_2", "C_2^3"],
+        "max_depth": 10
     },
     {
         "name": "octic_ab_dt_zc_10000_sq",
@@ -12,20 +14,26 @@
         "feature_type": "a",
         "model_type": "dt",
         "num_coeffs": 10000,
-        "powers_only": [2]
+        "powers_only": [2],
+        "class_names": ["C_8", "C_4 \\times C_2", "C_2^3"],
+        "max_depth": 10
     },
     {
         "name": "octic_ab_dt_zc_10000_prime",
         "degree": 8,
         "feature_type": "a_p",
         "model_type": "dt",
-        "num_coeffs": 10000
+        "num_coeffs": 10000,
+        "class_names": ["C_8", "C_4 \\times C_2", "C_2^3"],
+        "max_depth": 10
     },
     {
         "name": "octic_ab_dt_poly",
         "degree": 8,
         "feature_type": "c",
-        "model_type": "dt"
+        "model_type": "dt",
+        "class_names": ["C_8", "C_4 \\times C_2", "C_2^3"],
+        "max_depth": 10
     },
     {
         "name": "octic_ab_lr_zc_1000",

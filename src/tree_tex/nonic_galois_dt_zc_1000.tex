@@ -1,0 +1,15 @@
+\begin{forest}
+  label L/.style={edge label={node[midway,left,font=\scriptsize]{#1}}},
+  label R/.style={edge label={node[midway,right,font=\scriptsize]{#1}}},
+  for tree={forked edge, child anchor=north, for descendants={edge=->}}
+  [{$a_{01000} \le 4.5$}, draw
+    [{$C_9$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+    [{$a_{00343} \le 0.5$}, draw, label R=N
+      [{$C_9$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+      [{$a_{00027} \le 0.5$}, draw, label R=N
+        [{$C_9$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+        [{$C_3^3$}, rectangle, thick, draw, label R=N, tier=bottom, line width=1.5pt]
+      ]
+    ]
+  ]
+\end{forest}
