@@ -1,7 +1,8 @@
 import json
+import re
 from typing import List, Literal, Optional
 
-from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.tree import DecisionTreeClassifier, plot_tree, _tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
@@ -33,6 +34,75 @@ def powers(N: int, pows: List[Optional[int]]) -> List[int]:
         i = 1
     ls = sorted(list(ls))
     return ls
+
+
+# Code generated using o4-mini-high
+def numbers_with_power_multiples(N, pows):
+    """
+    Return all integers 1 < x ≤ N such that in the prime‐factorization
+    of x = ∏ p_i^e_i, each exponent e_i satisfies (e_i % k == 0) for at least
+    one k ∈ pows.
+
+    For example, if pows = [2,3], then 144 = 2^4 * 3^2 is allowed (since 4, 2 are multiples of 2).
+
+    Steps:
+      1. Find all primes p up to floor(N ** (1/min(pows))).  Any prime bigger
+         than that cannot have p^(min(pows)) ≤ N, so it is irrelevant.
+      2. For each of those “relevant” primes, build a list of allowed powers [1, p^e, …]
+         where e runs from 1 upward, and we include p^e exactly when e % k == 0 for some k.
+      3. Do a depth-first recursion over those primes, choosing for each prime one of its
+         “allowed powers” (including 1, which means “use p^0”), multiply them together,
+         and collect every result ≤ N.
+    """
+
+    if N < 2 or not pows:
+        return []
+
+    # Step 0: Sort pows and find the minimum (so we know how far we need to sieve).
+    pows = sorted(pows)
+    min_exp = pows[0]
+
+    # Step 1: Only primes p ≤ N**(1/min_exp) can contribute:
+    from math import floor
+    cutoff = int(floor(N ** (1.0 / min_exp)))
+    relevant_primes = primes(cutoff)
+
+    # Step 2: Precompute for each relevant prime p, a list of “allowed powers” ≤ N.
+    #   We always include 1 (meaning “don’t use this prime”), then for e=1,2,3,…, we keep
+    #   multiplying until p^e > N.  Whenever e % k == 0 for at least one k∈pows,
+    #   we append p^e.
+    prime_powers = []
+    for p in relevant_primes:
+        powers = [1]  # exponent 0 is always “allowed” (just skip the prime)
+        val = p
+        e = 1
+        while val <= N:
+            # if e is a multiple of any entry in pows, keep p^e
+            if any(e % k == 0 for k in pows):
+                powers.append(val)
+            e += 1
+            val *= p
+        prime_powers.append(powers)
+
+    results = set()
+
+    def dfs(idx, current):
+        # if we’ve decided on a power for every relevant prime, record it (if >1)
+        if idx == len(prime_powers):
+            if current > 1:
+                results.add(current)
+            return
+
+        for power_val in prime_powers[idx]:
+            new_val = current * power_val
+            if new_val > N:
+                # increasing power_val (or later primes) will only make it bigger
+                continue
+            dfs(idx + 1, new_val)
+
+    # Kick off recursion with idx=0 and current=1
+    dfs(0, 1)
+    return sorted(results)
 
 
 def df_stats(df: pl.DataFrame, label: Literal["rank", "galois_label"] = "rank"):
@@ -82,7 +152,7 @@ def X_y(
         if powers_only is None:
             columns_ = [f"a_{i:05d}" for i in range(1, N+1)]
         else:
-            columns_ = [f"a_{i:05d}" for i in powers(N, powers_only)]
+            columns_ = [f"a_{i:05d}" for i in numbers_with_power_multiples(N, powers_only)]
 
     elif feature_type == "a_p":
         # primes only
@@ -166,6 +236,8 @@ def run_experiments(
         ft = exp.get("feature_type")
         mt = exp.get("model_type")
         po = exp.get("powers_only")
+        md = exp.get("max_depth")
+        cln = exp.get("class_names")
         model, _ = run_experiment(
             df,
             name=exp.get("name"),
@@ -185,7 +257,7 @@ def run_experiments(
                 if po is None:
                     feature_names = [f"a_{i:05d}" for i in range(1, nc+1)]
                 else:
-                    feature_names = [f"a_{i:05d}" for i in powers(nc, po)]
+                    feature_names = [f"a_{i:05d}" for i in numbers_with_power_multiples(nc, po)]
             elif ft == "a_p":
                 feature_names = [f"a_{i:05d}" for i in primes(nc)]
             elif ft == "c":
@@ -200,11 +272,22 @@ def run_experiments(
             )
             plt.savefig(current_dir / f"figs/dt/{exp['name']}.png", dpi=1200)
             plt.show()
+
+            # Save tex file
+            latex = generate_forest_latex_from_tree(model, class_names=cln, max_depth=None)
+            with open(current_dir / f"tree_tex/{exp['name']}.tex", "w") as f:
+                f.write(latex)
+            if md is not None:
+                latex_md = generate_forest_latex_from_tree(model, class_names=cln, max_depth=md)
+                with open(current_dir / f"tree_tex/{exp['name']}_depth_{md}.tex", "w") as f:
+                    f.write(latex_md)
+                
+
         elif mt == "lr":
             if label == "galois_label" and ft == "a" and po is None:
                 # Check distribution of whole and special-power coefficients
                 k = min(30, nc - 1)
-                po_indices = powers(nc, lr_po)
+                po_indices = numbers_with_power_multiples(nc, lr_po)
                 po_indices = [i - 1 for i in po_indices]  # -1 because of 0-indexing
                 po_name = []
                 if 2 in lr_po:
@@ -326,3 +409,57 @@ def lr_coefficient_dist(
 def check_value_in(df: pl.DataFrame, index: int, values: List):
     col_values = df[f"a_{index:05d}"].unique().to_list()
     assert set(col_values) <= set(values), f"Invalid values in column a_{index:05d}: {col_values} not in {values}"
+
+
+# Code generated using o4-mini-high
+def generate_forest_latex_from_tree(model, class_names=None, max_depth=10):
+    """
+    Generates LaTeX code for 'forest' directly from a fitted DecisionTreeClassifier.
+    Infers feature names from model.feature_names_in_ and class names from model.classes_.
+    If max_depth is provided, nodes at that depth (even if not leaves) are printed as pseudo-leaves.
+    Returns a string containing the forest LaTeX block.
+    """
+    # Helper to wrap subscripts: "a_30" -> "a_{30}"
+    def wrap_subscripts(name):
+        return re.sub(r"_(\w+)", r"_{\1}", name)
+
+    feature_names = [wrap_subscripts(str(f)) for f in model.feature_names_in_]
+    if class_names is None:
+        class_names = [str(c) for c in model.classes_]
+    tree = model.tree_
+
+    def node_to_latex(node_id, indent=2, edge_label=None, depth=0):
+        space = ' ' * indent
+        edge_opt = f", {edge_label}" if edge_label is not None else ""
+        is_leaf = tree.feature[node_id] == _tree.TREE_UNDEFINED
+        # If reached max_depth and not a true leaf, print pseudo-leaf
+        if (max_depth is not None) and (depth >= max_depth) and not is_leaf:
+            return (f"{space}[{{${{\\cdots}}$}}, rectangle, draw{edge_opt}, tier=bottom]")
+        if is_leaf:
+            values = tree.value[node_id][0]
+            class_idx = int(values.argmax())
+            class_label = class_names[class_idx]
+            return (f"{space}[{{${class_label}$}}, rectangle, thick, draw{edge_opt}, "
+                    "tier=bottom, line width=1.5pt]")
+        # split node
+        feat_idx = tree.feature[node_id]
+        thresh = tree.threshold[node_id]
+        feat_name = feature_names[feat_idx]
+        cond = f"${feat_name} \\le {thresh}$"
+        node_opt = f"{{{cond}}}, draw{edge_opt}"
+        left_id = tree.children_left[node_id]
+        right_id = tree.children_right[node_id]
+        left_latex = node_to_latex(left_id, indent + 2, edge_label='label L=Y', depth=depth+1)
+        right_latex = node_to_latex(right_id, indent + 2, edge_label='label R=N', depth=depth+1)
+        return (f"{space}[{node_opt}\n"
+                f"{left_latex}\n"
+                f"{right_latex}\n"
+                f"{space}]")
+
+    preamble = ("\\begin{forest}\n"
+                "  label L/.style={edge label={node[midway,left,font=\\scriptsize]{#1}}},\n"
+                "  label R/.style={edge label={node[midway,right,font=\\scriptsize]{#1}}},\n"
+                "  for tree={forked edge, child anchor=north, for descendants={edge=->}}\n")
+    body = node_to_latex(0, indent=2, depth=0)
+    end = "\\end{forest}"
+    return f"{preamble}{body}\n{end}"
