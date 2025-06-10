@@ -19,7 +19,6 @@ The following libraries will be used outside of Sage (for ML experiments).
 - [scikit-learn](https://scikit-learn.org/stable/index.html)
 - [matplotlib](https://matplotlib.org/)
 - [numpy](https://numpy.org/doc/stable/index.html)
-- [seaborn](https://seaborn.pydata.org/)
 
 
 ## Install
