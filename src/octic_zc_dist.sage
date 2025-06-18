@@ -27,3 +27,18 @@ if __name__ == "__main__":
         zeta_count(df_8T4, n)
         print("==== 8T5 ====")
         zeta_count(df_8T5, n)
+
+    print("==== p^4-th indices, all octic fields ====")
+    indices = [2 ** 4, 3 ** 4, 5 ** 4, 7 ** 4]
+    for n in indices:
+        print(f"Zeta coefficient n = {n}")
+        print("==== 8T1 ====")
+        zeta_count(df_8T1, n)
+        print("==== 8T2 ====")
+        zeta_count(df_8T2, n)
+        print("==== 8T3 ====")
+        zeta_count(df_8T3, n)
+        print("==== 8T4 ====")
+        zeta_count(df_8T4, n)
+        print("==== 8T5 ====")
+        zeta_count(df_8T5, n)

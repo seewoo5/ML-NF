@@ -360,8 +360,8 @@ def print_tree_structure(clf: DecisionTreeClassifier, max_depth: Optional[int] =
                 )
 
 
-def lr_coefficient_dist(
-    model: LogisticRegression,
+def lr_coefficient_dist_(
+    coeff: np.ndarray,
     indices: Optional[List[int]] = None,
     k: Optional[int] = None,
     bins: int = 10,
@@ -370,7 +370,6 @@ def lr_coefficient_dist(
     """
     Get a distribution of the coefficients of a logistic regression model
     """
-    coeff = model.coef_[0]
     if indices is not None:
         coeff = coeff[indices]
     coeff_abs = np.abs(coeff)
@@ -404,6 +403,35 @@ def lr_coefficient_dist(
     if save_hist is not None:
         plt.savefig(save_hist)
     plt.show()
+
+
+def lr_coefficient_dist(
+    model: LogisticRegression,
+    indices: Optional[List[int]] = None,
+    k: Optional[int] = None,
+    bins: int = 10,
+    save_hist: Optional[str] = None,
+):
+    if len(model.coef_) == 1:  # binary classification
+        coeff = model.coef_[0]
+        lr_coefficient_dist_(
+            coeff,
+            indices=indices,
+            k=k,
+            bins=bins,
+            save_hist=save_hist,
+        )
+    else:  # multiclass classification
+        print("Multiclass classification detected. Analyzing each class separately.")
+        for i, coeff in enumerate(model.coef_):
+            print(f"Class {i + 1} ({model.classes_[i]}):")
+            lr_coefficient_dist_(
+                coeff,
+                indices=indices,
+                k=k,
+                bins=bins,
+                save_hist=save_hist.replace(".png", f"_class_{model.classes_[i]}.png") if save_hist else None,
+            )
 
 
 def check_value_in(df: pl.DataFrame, index: int, values: List):
