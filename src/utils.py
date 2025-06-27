@@ -190,6 +190,7 @@ def run_experiment(
         model = RandomForestClassifier(random_state=42)
     elif model_type == "lr":
         model = LogisticRegression(random_state=42, max_iter=lr_max_iter, solver=lr_solver)
+        y_train = y_train.to_numpy().ravel()  # Flatten y_train for logistic regression
     else:
         raise ValueError(f"Unknown model type: {model_type}")
     
