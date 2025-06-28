@@ -25,11 +25,18 @@
         "class_names": ["C_4", "C_2^2"]
     },
     {
+        "name": "quartic_galois_dt_zc_1000_prime_power",
+        "degree": 4,
+        "feature_type": "a_pp",
+        "model_type": "dt",
+        "num_coeffs": 1000,
+        "class_names": ["C_4", "C_2^2"]
+    },
+    {
         "name": "quartic_galois_dt_poly",
         "degree": 4,
         "feature_type": "c",
         "model_type": "dt",
-        "num_coeffs": 1000,
         "class_names": ["C_4", "C_2^2"]
     },
     {
@@ -55,10 +62,23 @@
         "num_coeffs": 1000
     },
     {
+        "name": "quartic_galois_lr_zc_1000_prime_power",
+        "degree": 4,
+        "feature_type": "a_pp",
+        "model_type": "lr",
+        "num_coeffs": 1000
+    },
+    {
         "name": "quartic_galois_lr_poly",
         "degree": 4,
         "feature_type": "c",
+        "model_type": "lr"
+    },
+    {
+        "name": "quartic_galois_lr_poly_normalized",
+        "degree": 4,
+        "feature_type": "c",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "normalize": true
     }
 ]

@@ -25,11 +25,18 @@
         "class_names": ["C_9", "C_3^3"]
     },
     {
+        "name": "nonic_galois_dt_zc_1000_prime_power",
+        "degree": 9,
+        "feature_type": "a_pp",
+        "model_type": "dt",
+        "num_coeffs": 1000,
+        "class_names": ["C_9", "C_3^3"]
+    },
+    {
         "name": "nonic_galois_dt_poly",
         "degree": 9,
         "feature_type": "c",
         "model_type": "dt",
-        "num_coeffs": 1000,
         "class_names": ["C_9", "C_3^3"]
     },
     {
@@ -55,10 +62,23 @@
         "num_coeffs": 1000
     },
     {
+        "name": "nonic_galois_lr_zc_1000_prime_power",
+        "degree": 9,
+        "feature_type": "a_pp",
+        "model_type": "lr",
+        "num_coeffs": 1000
+    },
+    {
         "name": "nonic_galois_lr_poly",
         "degree": 9,
         "feature_type": "c",
+        "model_type": "lr"
+    },
+    {
+        "name": "nonic_galois_lr_poly_normalized",
+        "degree": 9,
+        "feature_type": "c",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "normalize": true
     }
 ]

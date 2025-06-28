@@ -28,6 +28,15 @@
         "max_depth": 10
     },
     {
+        "name": "sextic_galois_dt_zc_10000_prime_power",
+        "degree": 6,
+        "feature_type": "a_pp",
+        "model_type": "dt",
+        "num_coeffs": 10000,
+        "class_names": ["C_6", "S_3"],
+        "max_depth": 10
+    },
+    {
         "name": "sextic_galois_dt_poly",
         "degree": 6,
         "feature_type": "c",
@@ -58,9 +67,24 @@
         "num_coeffs": 10000
     },
     {
+        "name": "sextic_galois_lr_zc_10000_prime_power",
+        "degree": 6,
+        "feature_type": "a_pp",
+        "model_type": "lr",
+        "num_coeffs": 10000
+    },
+    {
         "name": "sextic_galois_lr_poly",
         "degree": 6,
         "feature_type": "c",
         "model_type": "lr"
+    },
+    {
+        "name": "sextic_galois_lr_poly_normalized",
+        "degree": 6,
+        "feature_type": "c",
+        "model_type": "lr",
+        "num_coeffs": 1000,
+        "normalize": true
     }
 ]

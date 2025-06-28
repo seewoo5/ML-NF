@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,9 +38,26 @@ def powers(N: int, pows: List[Optional[int]]) -> List[int]:
 
 
 # Code generated using o4-mini-high
+def prime_powers(N: int) -> List[int]:
+    """
+    Return a sorted list of all numbers <= N that are powers of primes (p^k for prime p and integer k >= 1).
+    """
+    if N < 2:
+        return []
+    powers_set = set()
+    # For each prime, generate its powers
+    for p in primes(N):
+        power = p
+        while power <= N:
+            powers_set.add(power)
+            power *= p
+    return list(sorted(powers_set))
+
+
+# Code generated using o4-mini-high
 def numbers_with_power_multiples(N, pows):
     """
-    Return all integers 1 < x ≤ N such that in the prime‐factorization
+    Return all integers 1 < x ≤ N such that in the prime factorization
     of x = ∏ p_i^e_i, each exponent e_i satisfies (e_i % k == 0) for at least
     one k ∈ pows.
 
@@ -135,17 +153,31 @@ def zeta_count(
     df_n = df.group_by(
         f"a_{n:05d}"
     ).len().with_columns((pl.col("len") / pl.sum("len")).alias("percent")).sort(f"a_{n:05d}")
-    print(df_n)
+    return df_n
 
 
 def X_y(
     df: pl.DataFrame,
-    degree: int = 2,
-    feature_type: Literal["c", "a", "a_p"] = "c",
-    label: Literal["rank", "galois_label"] = "rank",
+    degree: int,
+    feature_type: Literal["c", "a", "a_p", "a_pp"],
+    label: Literal["rank", "galois_label"] = "galois_label",
     N: int = 1000,
     powers_only: Optional[List[int]] = None,
 ):
+    """Generate feature matrix X and target vector y from the dataframe.
+
+    Args:
+        df (pl.DataFrame): The input dataframe.
+        degree (int, optional): The degree of the polynomial features.
+        feature_type (Literal["c", "a", "a_p", "a_pp"], optional): The type of features to generate.
+            - "c": Coefficients of the polynomial.
+            - "a": Zeta coefficients.
+            - "a_p": Zeta coefficients for primes only.
+            - "a_pp": Zeta coefficients for prime-powers.
+        label (Literal["rank", "galois_label"], optional): The label column to predict. Defaults to "galois_label".
+        N (int, optional): The maximum value for feature generation. Defaults to 1000.
+        powers_only (Optional[List[int]], optional): If provided, only include powers of these integers. Defaults to None.
+    """
     if feature_type == "c":
         columns_ = [f"c_{i}" for i in range(degree)]
     elif feature_type == "a":
@@ -153,10 +185,12 @@ def X_y(
             columns_ = [f"a_{i:05d}" for i in range(1, N+1)]
         else:
             columns_ = [f"a_{i:05d}" for i in numbers_with_power_multiples(N, powers_only)]
-
     elif feature_type == "a_p":
         # primes only
         columns_ = [f"a_{i:05d}" for i in primes(N)]
+    elif feature_type == "a_pp":
+        # prime powers only
+        columns_ = [f"a_{i:05d}" for i in prime_powers(N)]
 
     X = df.select(columns_)
     y = df.select(label)
@@ -167,14 +201,15 @@ def run_experiment(
     df: pl.DataFrame,
     name: str,
     test_size: float = 0.2,
-    feature_type: str = Literal["c", "a", "a_p"],
+    feature_type: str = Literal["c", "a", "a_p", "a_pp"],
     degree: int = 2,
-    label: str = "rank",
+    label: str = "galois_label",
     model_type: Literal["dt", "rf", "lr"] = "dt",
     num_coeffs: Optional[int] = 1000,
     powers_only: Optional[List[int]] = None,
     lr_max_iter: int = 10000,
     lr_solver: str = "lbfgs",
+    normalize: bool = False,
 ):
     X, y = X_y(df, degree=degree, feature_type=feature_type, label=label, N=num_coeffs, powers_only=powers_only)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
@@ -182,6 +217,12 @@ def run_experiment(
     print(f"Data: {name}, {feature_type}")
     print(f"Train: {X_train.shape}")
     print(f"Test ({label}): {X_test.shape}")
+
+    if normalize:
+        # Normalize the features
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
 
     # Train the model
     if model_type == "dt":
@@ -239,6 +280,7 @@ def run_experiments(
         po = exp.get("powers_only")
         md = exp.get("max_depth")
         cln = exp.get("class_names")
+        norm = exp.get("normalize", False)
         model, _ = run_experiment(
             df,
             name=exp.get("name"),
@@ -251,6 +293,7 @@ def run_experiments(
             powers_only=po,
             lr_max_iter=exp.get("lr_max_iter", 10000),
             lr_solver=exp.get("lr_solver", "lbfgs"),
+            normalize=norm,
         )
 
         if mt == "dt" and save_tree_fig:
@@ -261,6 +304,8 @@ def run_experiments(
                     feature_names = [f"a_{i:05d}" for i in numbers_with_power_multiples(nc, po)]
             elif ft == "a_p":
                 feature_names = [f"a_{i:05d}" for i in primes(nc)]
+            elif ft == "a_pp":
+                feature_names = [f"a_{i:05d}" for i in prime_powers(nc)]
             elif ft == "c":
                 feature_names = [f"c_{i}" for i in range(deg)]
 
@@ -304,6 +349,7 @@ def run_experiments(
                 print(f"model weights: {model.coef_}")
                 print(f"model bias: {model.intercept_}")
 
+        del model  # Free memory
 
 
 def print_tree_structure(clf: DecisionTreeClassifier, max_depth: Optional[int] = None):
