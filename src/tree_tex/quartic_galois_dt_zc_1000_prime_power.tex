@@ -1,0 +1,36 @@
+\begin{forest}
+  label L/.style={edge label={node[midway,left,font=\scriptsize]{#1}}},
+  label R/.style={edge label={node[midway,right,font=\scriptsize]{#1}}},
+  for tree={forked edge, child anchor=north, for descendants={edge=->}}
+  [{$a_{00529} \le 0.5$}, draw
+    [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+    [{$a_{00121} \le 0.5$}, draw, label R=N
+      [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+      [{$a_{00961} \le 0.5$}, draw, label R=N
+        [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+        [{$a_{00049} \le 0.5$}, draw, label R=N
+          [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+          [{$a_{00009} \le 0.5$}, draw, label R=N
+            [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+            [{$a_{00361} \le 0.5$}, draw, label R=N
+              [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+              [{$a_{00025} \le 0.5$}, draw, label R=N
+                [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+                [{$a_{00004} \le 0.5$}, draw, label R=N
+                  [{$C_4$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+                  [{$a_{00289} \le 1.5$}, draw, label R=N
+                    [{$a_{00017} \le 0.5$}, draw, label L=Y
+                      [{$C_2^2$}, rectangle, thick, draw, label L=Y, tier=bottom, line width=1.5pt]
+                      [{$C_4$}, rectangle, thick, draw, label R=N, tier=bottom, line width=1.5pt]
+                    ]
+                    [{$C_2^2$}, rectangle, thick, draw, label R=N, tier=bottom, line width=1.5pt]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{forest}

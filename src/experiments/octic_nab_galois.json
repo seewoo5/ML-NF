@@ -28,6 +28,15 @@
         "max_depth": 10
     },
     {
+        "name": "octic_nab_dt_zc_10000_prime_power",
+        "degree": 8,
+        "feature_type": "a_pp",
+        "model_type": "dt",
+        "num_coeffs": 10000,
+        "class_names": ["D_4", "Q_8"],
+        "max_depth": 10
+    },
+    {
         "name": "octic_nab_dt_poly",
         "degree": 8,
         "feature_type": "c",
@@ -58,9 +67,23 @@
         "num_coeffs": 10000
     },
     {
+        "name": "octic_nab_lr_zc_10000_prime_power",
+        "degree": 8,
+        "feature_type": "a_pp",
+        "model_type": "lr",
+        "num_coeffs": 10000
+    },
+    {
         "name": "octic_nab_lr_poly",
         "degree": 8,
         "feature_type": "c",
         "model_type": "lr"
+    },
+    {
+        "name": "octic_nab_lr_poly_normalized",
+        "degree": 8,
+        "feature_type": "c",
+        "model_type": "lr",
+        "normalize": true
     }
 ]
