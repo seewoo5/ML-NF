@@ -1,31 +1,4 @@
 {
-    "nf_2": {
-        "degree": 2,
-        "include_galois_gp": false,
-        "galois_only": false,
-        "N": 1000,
-        "powers_only": null,
-        "limit": null,
-        "filename": "nf_2"
-    },
-    "nf_3": {
-        "degree": 3,
-        "include_galois_gp": false,
-        "galois_only": false,
-        "N": 1000,
-        "powers_only": null,
-        "limit": null,
-        "filename": "nf_3"
-    },
-    "nf_4": {
-        "degree": 4,
-        "include_galois_gp": true,
-        "galois_only": true,
-        "N": 1000,
-        "powers_only": null,
-        "limit": null,
-        "filename": "nf_4"
-    },
     "nf_4_galois": {
         "degree": 4,
         "include_galois_gp": true,

@@ -79,3 +79,8 @@ cd src
 sage nf_query.sage
 ```
 Data will be stored in the directory `src/data_nf`. This would take about 3 hours.
+
+
+## Run experiments
+
+See `src/README.md`.
