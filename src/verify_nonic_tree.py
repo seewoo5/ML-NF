@@ -1,6 +1,7 @@
 """
 Check that the simple decision tree for nonic fields gives 100% accuracy
 for all nonic Galois extensions in the LMFDB.
+Use `nf_query.sage` to download the data from the LMFDB.
 """
 import polars as pl
 
