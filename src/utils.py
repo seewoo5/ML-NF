@@ -5,7 +5,7 @@ from typing import List, Literal, Optional
 from sklearn.tree import DecisionTreeClassifier, plot_tree, _tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import balanced_accuracy_score, classification_report, confusion_matrix, roc_auc_score, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -241,6 +241,9 @@ def run_experiment(
     y_pred = model.predict(X_test)
     clr = classification_report(y_test, y_pred, digits=4)
     print(clr)
+    balanced_acc = balanced_accuracy_score(y_test, y_pred)
+    auroc = roc_auc_score(y_test, y_pred)
+    print(f"balanced ACC: {balanced_acc}, AUROC: {auroc}")
     print("Confusion matrix")
     cm = confusion_matrix(y_test, y_pred)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
