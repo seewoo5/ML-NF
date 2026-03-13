@@ -19,16 +19,6 @@
         "max_depth": 10
     },
     {
-        "name": "sextic_galois_dt_zc_10000_sq_cb",
-        "degree": 6,
-        "feature_type": "a",
-        "model_type": "dt",
-        "num_coeffs": 10000,
-        "powers_only": [2, 3],
-        "class_names": ["C_6", "S_3"],
-        "max_depth": 10
-    },
-    {
         "name": "sextic_galois_dt_zc_1000_prime",
         "degree": 6,
         "feature_type": "a_p",
@@ -56,15 +46,6 @@
         "max_depth": 10
     },
     {
-        "name": "sextic_galois_dt_zc_10000_prime_power",
-        "degree": 6,
-        "feature_type": "a_pp",
-        "model_type": "dt",
-        "num_coeffs": 10000,
-        "class_names": ["C_6", "S_3"],
-        "max_depth": 10
-    },
-    {
         "name": "sextic_galois_dt_poly",
         "degree": 6,
         "feature_type": "c",
@@ -88,14 +69,6 @@
         "powers_only": [2, 3]
     },
     {
-        "name": "sextic_galois_lr_zc_10000_sq_cb",
-        "degree": 6,
-        "feature_type": "a",
-        "model_type": "lr",
-        "num_coeffs": 10000,
-        "powers_only": [2, 3]
-    },
-    {
         "name": "sextic_galois_lr_zc_1000_prime",
         "degree": 6,
         "feature_type": "a_p",
@@ -103,25 +76,11 @@
         "num_coeffs": 1000
     },
     {
-        "name": "sextic_galois_lr_zc_10000_prime",
-        "degree": 6,
-        "feature_type": "a_p",
-        "model_type": "lr",
-        "num_coeffs": 10000
-    },
-    {
         "name": "sextic_galois_lr_zc_1000_prime_power",
         "degree": 6,
         "feature_type": "a_pp",
         "model_type": "lr",
         "num_coeffs": 1000
-    },
-    {
-        "name": "sextic_galois_lr_zc_10000_prime_power",
-        "degree": 6,
-        "feature_type": "a_pp",
-        "model_type": "lr",
-        "num_coeffs": 10000
     },
     {
         "name": "sextic_galois_lr_poly",

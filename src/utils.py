@@ -5,8 +5,8 @@ from typing import List, Literal, Optional
 from sklearn.tree import DecisionTreeClassifier, plot_tree, _tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import balanced_accuracy_score, classification_report, confusion_matrix, roc_auc_score, ConfusionMatrixDisplay
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import balanced_accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.model_selection import KFold, train_test_split
 from sklearn.preprocessing import StandardScaler
 
 import matplotlib.pyplot as plt
@@ -210,11 +210,109 @@ def run_experiment(
     lr_max_iter: int = 10000,
     lr_solver: str = "lbfgs",
     normalize: bool = False,
+    cv: int = 1,
 ):
     X, y = X_y(df, degree=degree, feature_type=feature_type, label=label, N=num_coeffs, powers_only=powers_only)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
 
     print(f"Data: {name}, {feature_type}")
+    X_np = X.to_numpy()
+    y_np = y.to_numpy().ravel()
+    classes = np.unique(y_np)
+
+    def build_model():
+        if model_type == "dt":
+            return DecisionTreeClassifier(random_state=42)
+        if model_type == "rf":
+            return RandomForestClassifier(random_state=42)
+        if model_type == "lr":
+            return LogisticRegression(random_state=42, max_iter=lr_max_iter, solver=lr_solver)
+        raise ValueError(f"Unknown model type: {model_type}")
+
+    if cv > 1:
+        print(f"Cross validation: KFold(n_splits={cv}, shuffle=True, random_state=42)")
+        kfold = KFold(n_splits=cv, shuffle=True, random_state=42)
+
+        reports = []
+        accuracies = []
+        balanced_accuracies = []
+        cms = []
+
+        for fold, (train_idx, test_idx) in enumerate(kfold.split(X_np), start=1):
+            X_train, X_test = X_np[train_idx], X_np[test_idx]
+            y_train, y_test = y_np[train_idx], y_np[test_idx]
+
+            if normalize:
+                scaler = StandardScaler()
+                X_train = scaler.fit_transform(X_train)
+                X_test = scaler.transform(X_test)
+
+            model_fold = build_model()
+            model_fold.fit(X_train, y_train)
+            y_pred = model_fold.predict(X_test)
+
+            report = classification_report(
+                y_test,
+                y_pred,
+                labels=classes,
+                output_dict=True,
+                zero_division=0,
+            )
+            reports.append(report)
+            accuracies.append(report["accuracy"])
+            balanced_accuracies.append(balanced_accuracy_score(y_test, y_pred))
+            cms.append(confusion_matrix(y_test, y_pred, labels=classes))
+            print(f"Fold {fold}/{cv}: acc={report['accuracy']:.4f}, balanced_acc={balanced_accuracies[-1]:.4f}")
+
+        cm_stack = np.stack(cms, axis=0).astype(float)
+        cm_mean = cm_stack.mean(axis=0)
+        cm_std = cm_stack.std(axis=0)
+
+        lines = ["Averaged classification report (mean ± std):"]
+        lines.append(f"accuracy: {np.mean(accuracies):.4f} ± {np.std(accuracies):.4f}")
+        lines.append(
+            f"balanced_acc: {np.mean(balanced_accuracies):.4f} ± {np.std(balanced_accuracies):.4f}"
+        )
+        lines.append("")
+        lines.append("per-class precision/recall/f1:")
+        for cls in classes:
+            key = str(cls)
+            p = np.array([r[key]["precision"] for r in reports], dtype=float)
+            r_ = np.array([r[key]["recall"] for r in reports], dtype=float)
+            f1 = np.array([r[key]["f1-score"] for r in reports], dtype=float)
+            lines.append(
+                f"{key}: precision {p.mean():.4f} ± {p.std():.4f}, "
+                f"recall {r_.mean():.4f} ± {r_.std():.4f}, "
+                f"f1 {f1.mean():.4f} ± {f1.std():.4f}"
+            )
+
+        clr = "\n".join(lines)
+        print(clr)
+        print("Averaged confusion matrix (mean over folds):")
+        print(np.array2string(cm_mean, precision=4))
+        print("Confusion matrix std (over folds):")
+        print(np.array2string(cm_std, precision=4))
+
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm_mean, display_labels=classes)
+        disp = disp.plot(cmap=plt.cm.Blues, values_format=".2f")
+        if model_type == "dt":
+            plt.savefig(f"figs/dt/{name}_cm.png", dpi=1200)
+        elif model_type == "lr":
+            plt.savefig(f"figs/lr/{name}_cm.png", dpi=1200)
+        plt.show()
+
+        # Fit one final model on full data so downstream plotting/analysis still works.
+        X_full = X
+        y_full = y
+        if normalize:
+            scaler = StandardScaler()
+            X_full = scaler.fit_transform(X_full)
+        if model_type == "lr":
+            y_full = y_full.to_numpy().ravel()
+        model = build_model()
+        model.fit(X_full, y_full)
+        return model, clr
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
     print(f"Train: {X_train.shape}")
     print(f"Test ({label}): {X_test.shape}")
 
@@ -224,17 +322,9 @@ def run_experiment(
         X_train = scaler.fit_transform(X_train)
         X_test = scaler.transform(X_test)
 
-    # Train the model
-    if model_type == "dt":
-        model = DecisionTreeClassifier(random_state=42)
-    elif model_type == "rf":
-        model = RandomForestClassifier(random_state=42)
-    elif model_type == "lr":
-        model = LogisticRegression(random_state=42, max_iter=lr_max_iter, solver=lr_solver)
+    model = build_model()
+    if model_type == "lr":
         y_train = y_train.to_numpy().ravel()  # Flatten y_train for logistic regression
-    else:
-        raise ValueError(f"Unknown model type: {model_type}")
-    
     model.fit(X_train, y_train)
 
     # Evaluate the model
@@ -242,8 +332,7 @@ def run_experiment(
     clr = classification_report(y_test, y_pred, digits=4)
     print(clr)
     balanced_acc = balanced_accuracy_score(y_test, y_pred)
-    auroc = roc_auc_score(y_test, y_pred)
-    print(f"balanced ACC: {balanced_acc}, AUROC: {auroc}")
+    print(f"balanced ACC: {balanced_acc}")
     print("Confusion matrix")
     cm = confusion_matrix(y_test, y_pred)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
@@ -297,6 +386,7 @@ def run_experiments(
             lr_max_iter=exp.get("lr_max_iter", 10000),
             lr_solver=exp.get("lr_solver", "lbfgs"),
             normalize=norm,
+            cv=exp.get("cv", 1),
         )
 
         if mt == "dt" and save_tree_fig:
