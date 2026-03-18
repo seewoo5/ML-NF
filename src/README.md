@@ -36,3 +36,7 @@ Run
 ```
 sage verify_galois.sage
 ```
+
+### False-positive examples
+
+`fase_positive_examples.sage` is used to find primes for Example 3.11 and 3.31 of the paper.
