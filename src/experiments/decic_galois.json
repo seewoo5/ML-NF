@@ -6,35 +6,39 @@
         "model_type": "dt",
         "num_coeffs": 1000,
         "class_names": ["C_{10}", "D_5"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
-        "name": "decic_galois_dt_zc_10000_sq_qu",
+        "name": "decic_galois_dt_zc_1000_sq_qu",
         "degree": 6,
         "feature_type": "a",
         "model_type": "dt",
-        "num_coeffs": 10000,
+        "num_coeffs": 1000,
         "powers_only": [2, 5],
         "class_names": ["C_{10}", "D_5"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
-        "name": "decic_galois_dt_zc_10000_prime",
+        "name": "decic_galois_dt_zc_1000_prime",
         "degree": 6,
         "feature_type": "a_p",
         "model_type": "dt",
-        "num_coeffs": 10000,
+        "num_coeffs": 1000,
         "class_names": ["C_{10}", "D_5"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
-        "name": "decic_galois_dt_zc_10000_prime_power",
+        "name": "decic_galois_dt_zc_1000_prime_power",
         "degree": 6,
         "feature_type": "a_pp",
         "model_type": "dt",
-        "num_coeffs": 10000,
+        "num_coeffs": 1000,
         "class_names": ["C_{10}", "D_5"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "decic_galois_dt_poly",
@@ -42,48 +46,64 @@
         "feature_type": "c",
         "model_type": "dt",
         "class_names": ["C_{10}", "D_5"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "decic_galois_lr_zc_1000",
         "degree": 6,
         "feature_type": "a",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
-        "name": "decic_galois_lr_zc_10000_sq_qu",
+        "name": "decic_galois_lr_zc_1000_normalized",
         "degree": 6,
         "feature_type": "a",
         "model_type": "lr",
-        "num_coeffs": 10000,
-        "powers_only": [2, 5]
+        "num_coeffs": 1000,
+        "normalize": true,
+        "cv" : 5
     },
     {
-        "name": "decic_galois_lr_zc_10000_prime",
+        "name": "decic_galois_lr_zc_1000_sq_qu",
+        "degree": 6,
+        "feature_type": "a",
+        "model_type": "lr",
+        "num_coeffs": 1000,
+        "powers_only": [2, 5],
+        "cv" : 5
+    },
+    {
+        "name": "decic_galois_lr_zc_1000_prime",
         "degree": 6,
         "feature_type": "a_p",
         "model_type": "lr",
-        "num_coeffs": 10000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
-        "name": "decic_galois_lr_zc_10000_prime_power",
+        "name": "decic_galois_lr_zc_1000_prime_power",
         "degree": 6,
         "feature_type": "a_pp",
         "model_type": "lr",
-        "num_coeffs": 10000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
         "name": "decic_galois_lr_poly",
         "degree": 6,
         "feature_type": "c",
-        "model_type": "lr"
+        "model_type": "lr",
+        "cv" : 5
     },
     {
         "name": "decic_galois_lr_poly_normalized",
         "degree": 6,
         "feature_type": "c",
         "model_type": "lr",
-        "normalize": true
+        "normalize": true,
+        "cv" : 5
     }
 ]

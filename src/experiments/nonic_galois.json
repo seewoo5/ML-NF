@@ -5,7 +5,8 @@
         "feature_type": "a",
         "model_type": "dt",
         "num_coeffs": 1000,
-        "class_names": ["C_9", "C_3^3"]
+        "class_names": ["C_9", "C_3^3"],
+        "cv" : 5
     },
     {
         "name": "nonic_galois_dt_zc_1000_cb",
@@ -14,7 +15,8 @@
         "model_type": "dt",
         "num_coeffs": 1000,
         "powers_only": [3],
-        "class_names": ["C_9", "C_3^3"]
+        "class_names": ["C_9", "C_3^3"],
+        "cv" : 5
     },
     {
         "name": "nonic_galois_dt_zc_1000_prime",
@@ -22,7 +24,8 @@
         "feature_type": "a_p",
         "model_type": "dt",
         "num_coeffs": 1000,
-        "class_names": ["C_9", "C_3^3"]
+        "class_names": ["C_9", "C_3^3"],
+        "cv" : 5
     },
     {
         "name": "nonic_galois_dt_zc_1000_prime_power",
@@ -30,21 +33,33 @@
         "feature_type": "a_pp",
         "model_type": "dt",
         "num_coeffs": 1000,
-        "class_names": ["C_9", "C_3^3"]
+        "class_names": ["C_9", "C_3^3"],
+        "cv" : 5
     },
     {
         "name": "nonic_galois_dt_poly",
         "degree": 9,
         "feature_type": "c",
         "model_type": "dt",
-        "class_names": ["C_9", "C_3^3"]
+        "class_names": ["C_9", "C_3^3"],
+        "cv" : 5
     },
     {
         "name": "nonic_galois_lr_zc_1000",
         "degree": 9,
         "feature_type": "a",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
+    },
+    {
+        "name": "nonic_galois_lr_zc_1000_normalized",
+        "degree": 9,
+        "feature_type": "a",
+        "model_type": "lr",
+        "num_coeffs": 1000,
+        "normalize": true,
+        "cv" : 5
     },
     {
         "name": "nonic_galois_lr_zc_1000_cb",
@@ -52,33 +67,38 @@
         "feature_type": "a",
         "model_type": "lr",
         "num_coeffs": 1000,
-        "powers_only": [3]
+        "powers_only": [3],
+        "cv" : 5
     },
     {
         "name": "nonic_galois_lr_zc_1000_prime",
         "degree": 9,
         "feature_type": "a_p",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
         "name": "nonic_galois_lr_zc_1000_prime_power",
         "degree": 9,
         "feature_type": "a_pp",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
         "name": "nonic_galois_lr_poly",
         "degree": 9,
         "feature_type": "c",
-        "model_type": "lr"
+        "model_type": "lr",
+        "cv" : 5
     },
     {
         "name": "nonic_galois_lr_poly_normalized",
         "degree": 9,
         "feature_type": "c",
         "model_type": "lr",
-        "normalize": true
+        "normalize": true,
+        "cv" : 5
     }
 ]

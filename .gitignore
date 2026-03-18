@@ -4,3 +4,4 @@ data_nf/*
 .DS_Store
 .venv
 __pycache__/
+*.txt
