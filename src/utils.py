@@ -300,16 +300,17 @@ def run_experiment(
             plt.savefig(f"figs/lr/{name}_cm.png", dpi=1200)
         plt.show()
 
-        # Fit one final model on full data so downstream plotting/analysis still works.
-        X_full = X
-        y_full = y
+        # Fit one final model on the same train split as the non-CV path.
+        X_train_final, _, y_train_final, _ = train_test_split(
+            X, y, test_size=test_size, random_state=42
+        )
         if normalize:
             scaler = StandardScaler()
-            X_full = scaler.fit_transform(X_full)
+            X_train_final = scaler.fit_transform(X_train_final)
         if model_type == "lr":
-            y_full = y_full.to_numpy().ravel()
+            y_train_final = y_train_final.to_numpy().ravel()
         model = build_model()
-        model.fit(X_full, y_full)
+        model.fit(X_train_final, y_train_final)
         return model, clr
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)

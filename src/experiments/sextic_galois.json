@@ -6,7 +6,8 @@
         "model_type": "dt",
         "num_coeffs": 1000,
         "class_names": ["C_6", "S_3"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_dt_zc_1000_sq_cb",
@@ -16,7 +17,8 @@
         "num_coeffs": 1000,
         "powers_only": [2, 3],
         "class_names": ["C_6", "S_3"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_dt_zc_1000_prime",
@@ -25,16 +27,8 @@
         "model_type": "dt",
         "num_coeffs": 1000,
         "class_names": ["C_6", "S_3"],
-        "max_depth": 10
-    },
-    {
-        "name": "sextic_galois_dt_zc_10000_prime",
-        "degree": 6,
-        "feature_type": "a_p",
-        "model_type": "dt",
-        "num_coeffs": 10000,
-        "class_names": ["C_6", "S_3"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_dt_zc_1000_prime_power",
@@ -43,7 +37,8 @@
         "model_type": "dt",
         "num_coeffs": 1000,
         "class_names": ["C_6", "S_3"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_dt_poly",
@@ -51,14 +46,25 @@
         "feature_type": "c",
         "model_type": "dt",
         "class_names": ["C_6", "S_3"],
-        "max_depth": 10
+        "max_depth": 10,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_lr_zc_1000",
         "degree": 6,
         "feature_type": "a",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
+    },
+    {
+        "name": "sextic_galois_lr_zc_1000_normalized",
+        "degree": 6,
+        "feature_type": "a",
+        "model_type": "lr",
+        "num_coeffs": 1000,
+        "normalize": true,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_lr_zc_1000_sq_cb",
@@ -66,33 +72,38 @@
         "feature_type": "a",
         "model_type": "lr",
         "num_coeffs": 1000,
-        "powers_only": [2, 3]
+        "powers_only": [2, 3],
+        "cv" : 5
     },
     {
         "name": "sextic_galois_lr_zc_1000_prime",
         "degree": 6,
         "feature_type": "a_p",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_lr_zc_1000_prime_power",
         "degree": 6,
         "feature_type": "a_pp",
         "model_type": "lr",
-        "num_coeffs": 1000
+        "num_coeffs": 1000,
+        "cv" : 5
     },
     {
         "name": "sextic_galois_lr_poly",
         "degree": 6,
         "feature_type": "c",
-        "model_type": "lr"
+        "model_type": "lr",
+        "cv" : 5
     },
     {
         "name": "sextic_galois_lr_poly_normalized",
         "degree": 6,
         "feature_type": "c",
         "model_type": "lr",
-        "normalize": true
+        "normalize": true,
+        "cv" : 5
     }
 ]
